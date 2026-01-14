@@ -1,0 +1,6 @@
+.venv/
+dist/
+node_modules/
+__pycache__/
+client/stats.html
+server/logs/

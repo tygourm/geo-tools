@@ -1,0 +1,6 @@
+client/dist/
+client/node_modules/
+client/components.json
+client/eslint.config.ts
+client/stats.html
+server/**/__pycache__/

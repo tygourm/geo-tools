@@ -1,0 +1,14 @@
+name: geo-tools
+
+services:
+  client:
+    image: geo-tools-client:0.0.0
+    ports:
+      - 3000:80
+
+  server:
+    image: geo-tools-server:0.0.0
+    ports:
+      - 8000:8000
+    environment:
+      - HOST=0.0.0.0

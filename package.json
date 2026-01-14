@@ -1,0 +1,21 @@
+{
+  "name": "geo-tools",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.28.0",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^6.0.2",
+    "prettier": "^3.7.4"
+  },
+  "prettier": {
+    "plugins": [
+      "@trivago/prettier-plugin-sort-imports"
+    ],
+    "proseWrap": "always",
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrder": [
+      "<THIRD_PARTY_MODULES>",
+      "@/"
+    ]
+  }
+}

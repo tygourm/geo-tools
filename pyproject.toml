@@ -1,0 +1,26 @@
+[project]
+name = "geo-tools"
+version = "0.0.0"
+requires-python = ">=3.12"
+
+[dependency-groups]
+dev = ["ruff", "ty", "uv-build"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "COM812", # missing-trailing-comma
+    "D100",   # undocumented-public-module
+    "D101",   # undocumented-public-class
+    "D103",   # undocumented-public-function
+    "D104",   # undocumented-public-package
+    "D203",   # incorrect-blank-line-before-class
+    "D213",   # multi-line-summary-second-line
+    "INP001", # implicit-namespace-package
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["server"]
+
+[tool.uv.workspace]
+members = ["server"]

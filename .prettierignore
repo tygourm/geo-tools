@@ -1,0 +1,4 @@
+client/src/routeTree.gen.ts
+client/src/vite-env.d.ts
+client/stats.html
+server/static/
