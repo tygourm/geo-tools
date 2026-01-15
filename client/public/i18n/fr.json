@@ -1,4 +1,7 @@
 {
+  "main-button": {
+    "tooltip": "Accueil"
+  },
   "theme-menu": {
     "dark": "Sombre",
     "light": "Clair",

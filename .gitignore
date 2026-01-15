@@ -3,4 +3,6 @@ dist/
 node_modules/
 __pycache__/
 client/stats.html
+docker/tileserver/assets/
+docker/tileserver/20260105.pmtiles
 server/logs/

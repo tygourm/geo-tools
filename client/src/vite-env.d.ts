@@ -9,6 +9,7 @@ type ImportMetaEnv = {
   DEV: boolean
   PROD: boolean
   SERVER_URL: string
+  TILESERVER_URL: string
   // @user-defined-start
   /*
    *  You can use this section to explicitly extend the type definition of `import.meta.env`
