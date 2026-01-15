@@ -8,10 +8,7 @@ import { viteEnvs } from "vite-envs";
 
 export default defineConfig({
   plugins: [
-    tanstackRouter({
-      target: "react",
-      autoCodeSplitting: true,
-    }),
+    tanstackRouter(),
     react({
       babel: {
         plugins: [["babel-plugin-react-compiler"]],

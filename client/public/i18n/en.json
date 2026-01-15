@@ -1,4 +1,7 @@
 {
+  "main-button": {
+    "tooltip": "Home"
+  },
   "theme-menu": {
     "dark": "Dark",
     "light": "Light",

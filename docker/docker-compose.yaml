@@ -12,3 +12,10 @@ services:
       - 8000:8000
     environment:
       - HOST=0.0.0.0
+
+  tileserver:
+    image: maptiler/tileserver-gl:v5.5.0
+    ports:
+      - 8080:8080
+    volumes:
+      - ./tileserver:/data

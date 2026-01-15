@@ -1,4 +1,6 @@
 client/src/routeTree.gen.ts
 client/src/vite-env.d.ts
 client/stats.html
+docker/tileserver/assets/
+docker/tileserver/20260105.pmtiles
 server/static/
