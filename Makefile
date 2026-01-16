@@ -28,7 +28,7 @@ docker_serve: docker_build
 
 docker_clean:
 	docker compose -f docker/docker-compose.yaml down
-	docker system prune -af --volumes
+	docker system prune -f
 
 write: init
 	pnpm prettier -w .

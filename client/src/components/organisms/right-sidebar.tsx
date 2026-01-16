@@ -1,10 +1,28 @@
-import { RightSidebarHeader } from "@/components/molecules/right-sidebar-header";
-import { Sidebar } from "@/components/ui/sidebar";
+import { useTranslation } from "react-i18next";
+
+import { MapState } from "@/components/molecules/map-state";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+} from "@/components/ui/sidebar";
 
 function RightSidebar() {
+  const { t } = useTranslation();
   return (
     <Sidebar side="right">
-      <RightSidebarHeader />
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>
+            {t("right-sidebar.map-state.group-label")}
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <MapState />
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
     </Sidebar>
   );
 }

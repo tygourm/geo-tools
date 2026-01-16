@@ -1,6 +1,30 @@
 {
+  "chat": {
+    "empty": {
+      "message": "Geo Tools",
+      "description": "Offline GeoJSON generation and visualization."
+    },
+    "prompt-input": {
+      "placeholder": "Show me the best city in the world, Brest, in France."
+    }
+  },
+  "common": {
+    "bearing": "Bearing",
+    "copy": "Copy",
+    "delete": "Delete",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "pitch": "Pitch",
+    "regenerate": "Regenerate",
+    "zoom": "Zoom"
+  },
   "main-button": {
     "tooltip": "Home"
+  },
+  "right-sidebar": {
+    "map-state": {
+      "group-label": "Map State"
+    }
   },
   "theme-menu": {
     "dark": "Dark",

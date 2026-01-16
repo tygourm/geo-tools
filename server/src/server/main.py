@@ -7,7 +7,7 @@ from uvicorn import run
 
 from server.core.lifespan import lifespan
 from server.core.settings import settings
-from server.infra.api.api_router import router as api
+from server.infra.api.router import router as api
 
 app = FastAPI(
     debug=settings.dev,

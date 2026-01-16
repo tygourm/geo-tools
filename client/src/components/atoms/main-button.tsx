@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { Earth } from "lucide-react";
+import { EarthIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { WithTooltip } from "@/components/atoms/with-tooltip";
@@ -16,7 +16,7 @@ function MainButton() {
         variant={"ghost"}
         onClick={() => navigate({ to: "/" })}
       >
-        <Earth />
+        <EarthIcon />
       </Button>
     </WithTooltip>
   );

@@ -6,7 +6,12 @@ build-backend = "uv_build"
 name = "server"
 version = "0.0.0"
 requires-python = ">=3.12"
-dependencies = ["fastapi[standard]", "pydantic-settings"]
+dependencies = [
+    "ag-ui-langgraph",
+    "fastapi[standard]",
+    "langchain-ollama",
+    "pydantic-settings",
+]
 
 [project.scripts]
 server = "server.main:main"
