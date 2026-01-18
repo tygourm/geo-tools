@@ -1,6 +1,30 @@
 {
+  "chat": {
+    "empty": {
+      "message": "Geo Tools",
+      "description": "Génération et visualisation de GeoJSON hors ligne."
+    },
+    "prompt-input": {
+      "placeholder": "Montre moi la meilleure ville du monde, Brest, en France."
+    }
+  },
+  "common": {
+    "bearing": "Orientation",
+    "copy": "Copier",
+    "delete": "Supprimer",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "pitch": "Inclinaison",
+    "regenerate": "Régénérer",
+    "zoom": "Zoom"
+  },
   "main-button": {
     "tooltip": "Accueil"
+  },
+  "right-sidebar": {
+    "map-state": {
+      "group-label": "État de la carte"
+    }
   },
   "theme-menu": {
     "dark": "Sombre",

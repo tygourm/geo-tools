@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     logs_backup_count: int = 10
     logs_max_bytes: int = 10 * 1024 * 1024
 
+    ollama_base_url: str = "http://localhost:11434"
+
     model_config = SettingsConfigDict()
 
 

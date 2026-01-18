@@ -17,7 +17,7 @@ function Root() {
     <>
       <SidebarProvider>
         <LeftSidebar />
-        <main className="flex-1">
+        <main className="flex-1 h-screen">
           <Outlet />
         </main>
         <RightSidebar />
