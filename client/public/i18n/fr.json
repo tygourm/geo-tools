@@ -1,12 +1,15 @@
 {
   "chat": {
     "empty": {
-      "message": "Geo Tools",
+      "title": "Geo Tools",
       "description": "Génération et visualisation de GeoJSON hors ligne."
     },
     "prompt-input": {
       "placeholder": "Montre moi la meilleure ville du monde, Brest, en France."
-    }
+    },
+    "run-error": "Erreur d'exécution {{ error }}",
+    "run-finished": "Exécution terminée",
+    "run-started": "Exécution démarrée"
   },
   "common": {
     "bearing": "Orientation",

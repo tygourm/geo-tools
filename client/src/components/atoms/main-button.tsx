@@ -10,7 +10,7 @@ function MainButton() {
   const navigate = useNavigate();
 
   return (
-    <WithTooltip content={t("main-button.tooltip")}>
+    <WithTooltip tooltip={t("main-button.tooltip")}>
       <Button
         size={"icon"}
         variant={"ghost"}

@@ -1,21 +1,20 @@
 import { HttpAgent } from "@ag-ui/client";
 import { type UserMessage } from "@ag-ui/core";
-import { CopyIcon, EarthIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
+import { EarthIcon } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import {
+  AssistantChatMessage,
+  UserChatMessage,
+} from "@/components/molecules/chat-message";
+import {
   Conversation,
   ConversationContent,
+  ConversationEmptyState,
   ConversationScrollButton,
 } from "@/components/ui/ai-elements/conversation";
-import {
-  Message,
-  MessageAction,
-  MessageActions,
-  MessageContent,
-  MessageResponse,
-} from "@/components/ui/ai-elements/message";
 import {
   PromptInput,
   PromptInputBody,
@@ -25,138 +24,125 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ui/ai-elements/prompt-input";
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
 import { useChat } from "@/hooks/use-chat";
 import { logger } from "@/lib/logs";
-import { aguiToAiSdk } from "@/lib/utils";
 
 function Chat() {
   const { t } = useTranslation();
   const { chatActions, chatSelectors } = useChat();
   const messages = chatSelectors.useMessages();
   const status = chatSelectors.useStatus();
+  const [input, setInput] = useState("");
 
   const handleSubmit = (input: PromptInputMessage) => {
     const message: UserMessage = {
+      content: input.text.trim(),
       id: crypto.randomUUID(),
-      content: input.text,
       role: "user",
     };
+    chatActions.addMessage(message);
     const agent = new HttpAgent({
       url: `${import.meta.env.SERVER_URL}/api/agents/run`,
-      initialMessages: [message],
+      initialMessages: [...messages, message],
       debug: import.meta.env.DEV,
     });
+
     agent.runAgent(
-      {
-        abortController: new AbortController(),
-      },
+      { abortController: new AbortController() },
       {
         onRunStartedEvent: ({ event }) => {
-          toast.info("Run started");
-          logger.info("Run started", event);
-          chatActions.setChatState({ status: "streaming" });
+          setInput("");
+          toast.info(t("chat.run-started"));
+          logger.info(event.type, event);
+          chatActions.setChatState({
+            threadId: event.threadId,
+            status: "streaming",
+          });
         },
         onRunFinishedEvent: ({ event }) => {
-          toast.success("Run finished");
-          logger.success("Run finished", event);
+          toast.success(t("chat.run-finished"));
+          logger.success(event.type, event);
           chatActions.setChatState({ status: "ready" });
         },
         onRunErrorEvent: ({ event }) => {
-          toast.error("Run error");
-          logger.error("Run error", event);
+          toast.error(t("chat.run-error", { error: event.message }));
+          logger.error(event.type, event);
           chatActions.setChatState({ status: "ready" });
         },
-        onMessagesSnapshotEvent: ({ event }) => {
-          logger.debug("Messages snapshot", event);
-          chatActions.setChatState({
-            messages: event.messages.map((m) => aguiToAiSdk(m)),
+        onTextMessageStartEvent: ({ event }) => {
+          chatActions.addMessage({
+            id: event.messageId,
+            role: event.role,
+            content: "",
           });
+        },
+        onTextMessageContentEvent: ({ event }) => {
+          chatActions.streamContent(event.messageId, event.delta);
+        },
+        onToolCallStartEvent: ({ event }) => {
+          if (!event.parentMessageId) return;
+          chatActions.addToolCall(
+            event.toolCallId,
+            event.toolCallName,
+            event.parentMessageId,
+          );
+        },
+        onToolCallArgsEvent: ({ event }) => {
+          chatActions.streamToolCallArgs(event.toolCallId, event.delta);
+        },
+        onToolCallResultEvent: ({ event }) => {
+          chatActions.addToolCallResult(
+            event.messageId,
+            event.toolCallId,
+            event.content,
+          );
+        },
+        onMessagesSnapshotEvent: ({ event }) => {
+          logger.info(event.type, event);
+          chatActions.setChatState({ messages: event.messages });
         },
       },
     );
   };
 
   return (
-    <div className="flex flex-col h-full p-2">
+    <div className="flex size-full flex-col p-2">
       <Conversation>
-        <ConversationContent className="p-0 px-4 h-full">
+        <ConversationContent className="h-full gap-2 p-0 px-2">
           {messages.length === 0 ? (
-            <Empty className="h-full md:p-0">
-              <EmptyHeader>
-                <EmptyMedia className="mb-0">
-                  <EarthIcon />
-                </EmptyMedia>
-                <EmptyTitle>{t("chat.empty.message")}</EmptyTitle>
-                <EmptyDescription>
-                  {t("chat.empty.description")}
-                </EmptyDescription>
-              </EmptyHeader>
-            </Empty>
+            <ConversationEmptyState
+              icon={<EarthIcon />}
+              title={t("chat.empty.title")}
+              description={t("chat.empty.description")}
+            />
           ) : (
-            messages.map((m) => (
-              <div key={m.id}>
-                {m.parts.map((p, i) => {
-                  switch (p.type) {
-                    case "text":
-                      return (
-                        <Message key={`${m.id}-${i}`} from={m.role}>
-                          <MessageContent>
-                            <MessageResponse>{p.text}</MessageResponse>
-                          </MessageContent>
-                          {m.role === "user" && (
-                            <MessageActions className="justify-end">
-                              <MessageAction
-                                tooltip={t("common.delete")}
-                                disabled={status !== "ready"}
-                              >
-                                <TrashIcon />
-                              </MessageAction>
-                              <MessageAction tooltip={t("common.copy")}>
-                                <CopyIcon />
-                              </MessageAction>
-                            </MessageActions>
-                          )}
-                          {m.role === "assistant" && (
-                            <MessageActions>
-                              <MessageAction
-                                tooltip={t("common.regenerate")}
-                                disabled={status !== "ready"}
-                              >
-                                <RefreshCcwIcon />
-                              </MessageAction>
-                              <MessageAction tooltip={t("common.copy")}>
-                                <CopyIcon />
-                              </MessageAction>
-                            </MessageActions>
-                          )}
-                        </Message>
-                      );
-                    default:
-                      return null;
-                  }
-                })}
-              </div>
-            ))
+            messages.map((m) => {
+              if (m.role === "user") {
+                return <UserChatMessage key={m.id} {...m} />;
+              } else if (m.role === "assistant") {
+                return <AssistantChatMessage key={m.id} {...m} />;
+              } else {
+                return null;
+              }
+            })
           )}
-          <ConversationScrollButton />
         </ConversationContent>
+        <ConversationScrollButton />
       </Conversation>
       <PromptInput onSubmit={handleSubmit}>
         <PromptInputBody>
           <PromptInputTextarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
             placeholder={t("chat.prompt-input.placeholder")}
           />
         </PromptInputBody>
         <PromptInputFooter>
           <PromptInputTools />
-          <PromptInputSubmit status={status} disabled={status !== "ready"} />
+          <PromptInputSubmit
+            status={status}
+            disabled={status !== "ready" || !input.trim()}
+          />
         </PromptInputFooter>
       </PromptInput>
     </div>

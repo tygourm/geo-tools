@@ -306,14 +306,14 @@ export function PromptInputAttachment({
       <HoverCardTrigger asChild>
         <div
           className={cn(
-            "group relative flex h-8 cursor-pointer select-none items-center gap-1.5 rounded-md border border-border px-1.5 font-medium text-sm transition-all hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+            "group border-border hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 relative flex h-8 cursor-pointer items-center gap-1.5 rounded-md border px-1.5 text-sm font-medium transition-all select-none",
             className,
           )}
           key={data.id}
           {...props}
         >
           <div className="relative size-5 shrink-0">
-            <div className="absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded bg-background transition-opacity group-hover:opacity-0">
+            <div className="bg-background absolute inset-0 flex size-5 items-center justify-center overflow-hidden rounded transition-opacity group-hover:opacity-0">
               {isImage ? (
                 <img
                   alt={filename || "attachment"}
@@ -323,7 +323,7 @@ export function PromptInputAttachment({
                   width={20}
                 />
               ) : (
-                <div className="flex size-5 items-center justify-center text-muted-foreground">
+                <div className="text-muted-foreground flex size-5 items-center justify-center">
                   <PaperclipIcon className="size-3" />
                 </div>
               )}
@@ -361,11 +361,11 @@ export function PromptInputAttachment({
           )}
           <div className="flex items-center gap-2.5">
             <div className="min-w-0 flex-1 space-y-1 px-0.5">
-              <h4 className="truncate font-semibold text-sm leading-none">
+              <h4 className="truncate text-sm leading-none font-semibold">
                 {filename || (isImage ? "Image" : "Attachment")}
               </h4>
               {data.mediaType && (
-                <p className="truncate font-mono text-muted-foreground text-xs">
+                <p className="text-muted-foreground truncate font-mono text-xs">
                   {data.mediaType}
                 </p>
               )}
@@ -397,7 +397,7 @@ export function PromptInputAttachments({
 
   return (
     <div
-      className={cn("flex flex-wrap items-center gap-2 p-3 w-full", className)}
+      className={cn("flex w-full flex-wrap items-center gap-2 p-3", className)}
       {...props}
     >
       {attachments.files.map((file) => (
@@ -1210,7 +1210,7 @@ export const PromptInputSpeechButton = ({
     <PromptInputButton
       className={cn(
         "relative transition-all duration-200",
-        isListening && "animate-pulse bg-accent text-accent-foreground",
+        isListening && "bg-accent text-accent-foreground animate-pulse",
         className,
       )}
       disabled={!recognition}
@@ -1238,7 +1238,7 @@ export const PromptInputSelectTrigger = ({
 }: PromptInputSelectTriggerProps) => (
   <SelectTrigger
     className={cn(
-      "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
+      "text-muted-foreground border-none bg-transparent font-medium shadow-none transition-colors",
       "hover:bg-accent hover:text-foreground aria-expanded:bg-accent aria-expanded:text-foreground",
       className,
     )}
@@ -1326,7 +1326,7 @@ export const PromptInputTabLabel = ({
 }: PromptInputTabLabelProps) => (
   <h3
     className={cn(
-      "mb-2 px-3 font-medium text-muted-foreground text-xs",
+      "text-muted-foreground mb-2 px-3 text-xs font-medium",
       className,
     )}
     {...props}
@@ -1350,7 +1350,7 @@ export const PromptInputTabItem = ({
 }: PromptInputTabItemProps) => (
   <div
     className={cn(
-      "flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent",
+      "hover:bg-accent flex items-center gap-2 px-3 py-2 text-xs",
       className,
     )}
     {...props}
