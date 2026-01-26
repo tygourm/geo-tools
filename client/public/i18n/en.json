@@ -1,12 +1,15 @@
 {
   "chat": {
     "empty": {
-      "message": "Geo Tools",
+      "title": "Geo Tools",
       "description": "Offline GeoJSON generation and visualization."
     },
     "prompt-input": {
       "placeholder": "Show me the best city in the world, Brest, in France."
-    }
+    },
+    "run-error": "Run error {{ error }}",
+    "run-finished": "Run finished",
+    "run-started": "Run started"
   },
   "common": {
     "bearing": "Bearing",

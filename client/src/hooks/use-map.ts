@@ -11,14 +11,6 @@ const MapStateSchema = z.object({
 
 type MapState = z.infer<typeof MapStateSchema>;
 
-type MapActions = {
-  setState: (state: MapState) => void;
-};
-
-type MapSelectors = {
-  useState: () => MapState;
-};
-
 const store = new Store<MapState>({
   longitude: -4.48601,
   latitude: 48.39053,
@@ -27,12 +19,11 @@ const store = new Store<MapState>({
   zoom: 8,
 });
 
-const useMap = () => {
-  const actions: MapActions = {} as MapActions;
-
-  actions.setState = (state) => {
+const mapActions: {
+  setMapState: (state: Partial<MapState>) => void;
+} = {
+  setMapState: (state) => {
     const parsed = MapStateSchema.parse(state);
-
     store.setState({
       longitude: +parsed.longitude.toFixed(5),
       latitude: +parsed.latitude.toFixed(5),
@@ -40,16 +31,13 @@ const useMap = () => {
       pitch: +parsed.pitch.toFixed(5),
       zoom: +parsed.zoom.toFixed(5),
     });
-  };
-
-  const selectors: MapSelectors = {
-    useState: () => useStore(store, (state) => state),
-  };
-
-  return {
-    mapActions: actions,
-    mapSelectors: selectors,
-  };
+  },
 };
 
-export { useMap };
+const mapSelectors: {
+  useState: () => MapState;
+} = {
+  useState: () => useStore(store, (state) => state),
+};
+
+export const useMap = () => ({ mapActions, mapSelectors });

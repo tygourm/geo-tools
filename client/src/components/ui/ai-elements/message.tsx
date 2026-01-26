@@ -1,6 +1,10 @@
 "use client";
 
+import { code } from "@streamdown/code";
+import { createMathPlugin } from "@streamdown/math";
+import { mermaid } from "@streamdown/mermaid";
 import type { FileUIPart, UIMessage } from "ai";
+import "katex/dist/katex.min.css";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -20,6 +24,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+
+const math = createMathPlugin({ singleDollarTextMath: true });
 
 export type MessageProps = HTMLAttributes<HTMLDivElement> & {
   from: UIMessage["role"];
@@ -46,7 +52,7 @@ export const MessageContent = ({
   <div
     className={cn(
       "is-user:dark flex w-fit max-w-full min-w-0 flex-col gap-2 overflow-hidden text-sm",
-      "group-[.is-user]:ml-auto group-[.is-user]:rounded-lg group-[.is-user]:bg-secondary group-[.is-user]:px-4 group-[.is-user]:py-3 group-[.is-user]:text-foreground",
+      "group-[.is-user]:bg-secondary group-[.is-user]:text-foreground group-[.is-user]:ml-auto group-[.is-user]:rounded-lg group-[.is-user]:px-4 group-[.is-user]:py-3",
       "group-[.is-assistant]:text-foreground",
       className,
     )}
@@ -296,7 +302,7 @@ export const MessageBranchPage = ({
   return (
     <ButtonGroupText
       className={cn(
-        "border-none bg-transparent text-muted-foreground shadow-none",
+        "text-muted-foreground border-none bg-transparent shadow-none",
         className,
       )}
       {...props}
@@ -315,6 +321,7 @@ export const MessageResponse = memo(
         "size-full [&>*:first-child]:mt-0 [&>*:last-child]:mb-0",
         className,
       )}
+      plugins={{ code, math, mermaid }}
       {...props}
     />
   ),
@@ -361,7 +368,7 @@ export function MessageAttachment({
           {onRemove && (
             <Button
               aria-label="Remove attachment"
-              className="absolute top-2 right-2 size-6 rounded-full bg-background/80 p-0 opacity-0 backdrop-blur-sm transition-opacity hover:bg-background group-hover:opacity-100 [&>svg]:size-3"
+              className="bg-background/80 hover:bg-background absolute top-2 right-2 size-6 rounded-full p-0 opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 [&>svg]:size-3"
               onClick={(e) => {
                 e.stopPropagation();
                 onRemove();
@@ -378,7 +385,7 @@ export function MessageAttachment({
         <>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="flex size-full shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
+              <div className="bg-muted text-muted-foreground flex size-full shrink-0 items-center justify-center rounded-lg">
                 <PaperclipIcon className="size-4" />
               </div>
             </TooltipTrigger>
@@ -389,7 +396,7 @@ export function MessageAttachment({
           {onRemove && (
             <Button
               aria-label="Remove attachment"
-              className="size-6 shrink-0 rounded-full p-0 opacity-0 transition-opacity hover:bg-accent group-hover:opacity-100 [&>svg]:size-3"
+              className="hover:bg-accent size-6 shrink-0 rounded-full p-0 opacity-0 transition-opacity group-hover:opacity-100 [&>svg]:size-3"
               onClick={(e) => {
                 e.stopPropagation();
                 onRemove();

@@ -12,6 +12,6 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     init_logger(settings)
-    logger.info("%s Server startup...", app.title)
+    logger.info("%s startup...", app.title)
     yield
-    logger.info("%s Server shutdown...", app.title)
+    logger.info("%s shutdown...", app.title)

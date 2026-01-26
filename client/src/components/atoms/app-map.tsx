@@ -12,17 +12,17 @@ import { useResolvedTheme } from "@/components/providers/theme";
 import { useMap } from "@/hooks/use-map";
 
 function AppMap() {
-  const map = useRef<MapRef>(null);
-  const theme = useResolvedTheme();
   const { mapActions, mapSelectors } = useMap();
   const mapState = mapSelectors.useState();
+  const theme = useResolvedTheme();
+  const map = useRef<MapRef>(null);
 
   return (
     <Map
       ref={map}
       attributionControl={false}
       initialViewState={mapState}
-      onMove={(e) => mapActions.setState(e.viewState)}
+      onMove={(e) => mapActions.setMapState(e.viewState)}
       mapStyle={
         theme === "dark"
           ? `${import.meta.env.TILESERVER_URL}/styles/dark/style.json`
