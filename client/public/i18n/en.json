@@ -22,7 +22,8 @@
     "zoom": "Zoom"
   },
   "main-button": {
-    "tooltip": "Home"
+    "hide-map": "Hide Map",
+    "show-map": "Show Map"
   },
   "right-sidebar": {
     "map-state": {

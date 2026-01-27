@@ -6,12 +6,14 @@ type ChatState = {
   threadId?: string;
   status: ChatStatus;
   messages: Message[];
+  mode: "full" | "side";
 };
 
 const store = new Store<ChatState>({
   threadId: undefined,
   status: "ready",
   messages: [],
+  mode: "side",
 });
 
 const chatActions: {
@@ -29,6 +31,7 @@ const chatActions: {
     toolCallId: string,
     content: string,
   ) => void;
+  toggleMode: () => void;
 } = {
   setChatState: (state) =>
     store.setState((prevState) => ({ ...prevState, ...state })),
@@ -97,17 +100,24 @@ const chatActions: {
           : m,
       ),
     })),
+  toggleMode: () =>
+    store.setState((prevState) => ({
+      ...prevState,
+      mode: prevState.mode === "side" ? "full" : "side",
+    })),
 };
 
 const chatSelectors: {
-  useStatus: () => ChatStatus;
-  useMessages: () => Message[];
+  useStatus: () => ChatState["status"];
+  useMessages: () => ChatState["messages"];
   useToolCallResults: () => ToolMessage[];
+  useMode: () => ChatState["mode"];
 } = {
   useStatus: () => useStore(store, (state) => state.status),
   useMessages: () => useStore(store, (state) => state.messages),
   useToolCallResults: () =>
     useStore(store, (state) => state.messages.filter((m) => m.role === "tool")),
+  useMode: () => useStore(store, (state) => state.mode),
 };
 
 export const useChat = () => ({ chatActions, chatSelectors });

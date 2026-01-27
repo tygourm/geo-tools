@@ -26,12 +26,14 @@ import {
 } from "@/components/ui/ai-elements/prompt-input";
 import { useChat } from "@/hooks/use-chat";
 import { logger } from "@/lib/logs";
+import { cn } from "@/lib/utils";
 
 function Chat() {
   const { t } = useTranslation();
   const { chatActions, chatSelectors } = useChat();
   const messages = chatSelectors.useMessages();
   const status = chatSelectors.useStatus();
+  const mode = chatSelectors.useMode();
   const [input, setInput] = useState("");
 
   const handleSubmit = (input: PromptInputMessage) => {
@@ -98,7 +100,6 @@ function Chat() {
           );
         },
         onMessagesSnapshotEvent: ({ event }) => {
-          logger.info(event.type, event);
           chatActions.setChatState({ messages: event.messages });
         },
       },
@@ -106,7 +107,12 @@ function Chat() {
   };
 
   return (
-    <div className="flex size-full flex-col p-2">
+    <div
+      className={cn(
+        "flex size-full flex-col p-2",
+        mode === "full" && "max-w-3xl",
+      )}
+    >
       <Conversation>
         <ConversationContent className="h-full gap-2 p-0 px-2">
           {messages.length === 0 ? (

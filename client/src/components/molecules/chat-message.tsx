@@ -1,5 +1,13 @@
 import type { AssistantMessage, UserMessage } from "@ag-ui/core";
-import { CheckIcon, CopyIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
+import {
+  CheckIcon,
+  CopyIcon,
+  RefreshCcwIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  TrashIcon,
+} from "lucide-react";
+import { useState } from "react";
 
 import {
   Message,
@@ -18,6 +26,14 @@ import {
 import { useChat } from "@/hooks/use-chat";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
+const useFeedback = () => {
+  const [feedback, setFeedback] = useState<boolean | null>(null);
+  const updateFeedback = (value: boolean) => {
+    setFeedback(value === feedback ? null : value);
+  };
+  return { feedback, updateFeedback };
+};
+
 const UserChatMessage = (message: UserMessage) => {
   const content =
     typeof message.content === "string"
@@ -33,11 +49,11 @@ const UserChatMessage = (message: UserMessage) => {
           : message.content.find((c) => c.type === "text")?.text}
       </MessageContent>
       <MessageActions className="justify-end">
-        <MessageAction onClick={() => copy(content)}>
-          {isCopied ? <CheckIcon /> : <CopyIcon />}
-        </MessageAction>
         <MessageAction>
           <TrashIcon />
+        </MessageAction>
+        <MessageAction onClick={() => copy(content)}>
+          {isCopied ? <CheckIcon /> : <CopyIcon />}
         </MessageAction>
       </MessageActions>
     </Message>
@@ -47,6 +63,7 @@ const UserChatMessage = (message: UserMessage) => {
 const AssistantChatMessage = (message: AssistantMessage) => {
   const { chatSelectors } = useChat();
   const [copy, isCopied] = useCopyToClipboard();
+  const { feedback, updateFeedback } = useFeedback();
   const toolCallResults = chatSelectors.useToolCallResults();
 
   return (
@@ -93,11 +110,21 @@ const AssistantChatMessage = (message: AssistantMessage) => {
             <MessageResponse>{message.content}</MessageResponse>
           </MessageContent>
           <MessageActions>
-            <MessageAction onClick={() => copy(message.content || "")}>
-              {isCopied ? <CheckIcon /> : <CopyIcon />}
+            <MessageAction onClick={() => updateFeedback(true)}>
+              <ThumbsUpIcon
+                fill={feedback === true ? "currentColor" : "none"}
+              />
+            </MessageAction>
+            <MessageAction onClick={() => updateFeedback(false)}>
+              <ThumbsDownIcon
+                fill={feedback === false ? "currentColor" : "none"}
+              />
             </MessageAction>
             <MessageAction>
               <RefreshCcwIcon />
+            </MessageAction>
+            <MessageAction onClick={() => copy(message.content || "")}>
+              {isCopied ? <CheckIcon /> : <CopyIcon />}
             </MessageAction>
           </MessageActions>
         </>

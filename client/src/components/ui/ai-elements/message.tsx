@@ -1,5 +1,4 @@
 "use client";
-
 import { code } from "@streamdown/code";
 import { createMathPlugin } from "@streamdown/math";
 import { mermaid } from "@streamdown/mermaid";

@@ -1,20 +1,23 @@
-import { useNavigate } from "@tanstack/react-router";
 import { EarthIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { WithTooltip } from "@/components/atoms/with-tooltip";
 import { Button } from "@/components/ui/button";
+import { useChat } from "@/hooks/use-chat";
 
 function MainButton() {
+  const { chatActions, chatSelectors } = useChat();
+  const mode = chatSelectors.useMode();
   const { t } = useTranslation();
-  const navigate = useNavigate();
 
   return (
-    <WithTooltip tooltip={t("main-button.tooltip")}>
+    <WithTooltip
+      tooltip={t(`main-button.${mode === "side" ? "hide" : "show"}-map`)}
+    >
       <Button
         size={"icon"}
-        variant={"ghost"}
-        onClick={() => navigate({ to: "/" })}
+        onClick={chatActions.toggleMode}
+        variant={mode === "side" ? "default" : "ghost"}
       >
         <EarthIcon />
       </Button>
