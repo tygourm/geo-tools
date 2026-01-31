@@ -22,7 +22,8 @@
     "zoom": "Zoom"
   },
   "main-button": {
-    "tooltip": "Accueil"
+    "hide-map": "Cacher la carte",
+    "show-map": "Afficher la carte"
   },
   "right-sidebar": {
     "map-state": {

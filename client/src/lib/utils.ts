@@ -5,4 +5,12 @@ const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
 
-export { cn };
+const safeParseJSON = <T>(text: string, defaultValue?: T) => {
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return defaultValue || null;
+  }
+};
+
+export { cn, safeParseJSON };

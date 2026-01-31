@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { Navigate, RouterProvider, createRouter } from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
@@ -9,7 +9,10 @@ import "@/lib/i18n";
 import { routeTree } from "@/routeTree.gen";
 
 const client = new QueryClient();
-const router = createRouter({ routeTree });
+const router = createRouter({
+  routeTree,
+  defaultNotFoundComponent: () => <Navigate to="/" replace />,
+});
 
 declare module "@tanstack/react-router" {
   interface Register {
