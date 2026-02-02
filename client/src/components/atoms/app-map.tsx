@@ -5,16 +5,16 @@ import {
   type Point,
   type Polygon,
 } from "geojson";
+import { type ControlPosition, GlobeControl } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { useRef } from "react";
 import {
   FullscreenControl,
   Layer,
   Map,
-  type MapRef,
   NavigationControl,
   ScaleControl,
   Source,
+  useControl,
 } from "react-map-gl/maplibre";
 
 import { useResolvedTheme } from "@/components/providers/theme";
@@ -22,8 +22,12 @@ import { useChat } from "@/hooks/use-chat";
 import { useMap } from "@/hooks/use-map";
 import { safeParseJSON } from "@/lib/utils";
 
+function ProjectionControl({ position }: { position: ControlPosition }) {
+  useControl(() => new GlobeControl(), { position });
+  return null;
+}
+
 function AppMap() {
-  const map = useRef<MapRef>(null);
   const theme = useResolvedTheme();
   const { mapActions, mapSelectors } = useMap();
   const mapState = mapSelectors.useState();
@@ -48,7 +52,6 @@ function AppMap() {
 
   return (
     <Map
-      ref={map}
       attributionControl={false}
       initialViewState={mapState}
       onMove={(e) => mapActions.setMapState(e.viewState)}
@@ -86,8 +89,9 @@ function AppMap() {
       <ScaleControl position="top-right" />
       <ScaleControl position="top-right" unit="imperial" />
       <ScaleControl position="top-right" unit="nautical" />
-      <FullscreenControl />
-      <NavigationControl />
+      <NavigationControl position="top-right" visualizePitch />
+      <FullscreenControl position="top-right" />
+      <ProjectionControl position="top-right" />
     </Map>
   );
 }
