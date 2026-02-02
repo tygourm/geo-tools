@@ -2,7 +2,6 @@ import type { AssistantMessage, UserMessage } from "@ag-ui/core";
 import {
   CheckIcon,
   CopyIcon,
-  RefreshCcwIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
   TrashIcon,
@@ -40,6 +39,8 @@ const UserChatMessage = (message: UserMessage) => {
       ? message.content
       : message.content.find((c) => c.type === "text")?.text || "";
   const [copy, isCopied] = useCopyToClipboard();
+  const { chatActions, chatSelectors } = useChat();
+  const streaming = chatSelectors.useStatus() === "streaming";
 
   return (
     <Message from="user" className="max-w-full">
@@ -49,7 +50,10 @@ const UserChatMessage = (message: UserMessage) => {
           : message.content.find((c) => c.type === "text")?.text}
       </MessageContent>
       <MessageActions className="justify-end">
-        <MessageAction>
+        <MessageAction
+          disabled={streaming}
+          onClick={() => chatActions.deleteMessage(message.id)}
+        >
           <TrashIcon />
         </MessageAction>
         <MessageAction onClick={() => copy(content)}>
@@ -61,10 +65,11 @@ const UserChatMessage = (message: UserMessage) => {
 };
 
 const AssistantChatMessage = (message: AssistantMessage) => {
-  const { chatSelectors } = useChat();
   const [copy, isCopied] = useCopyToClipboard();
   const { feedback, updateFeedback } = useFeedback();
+  const { chatSelectors } = useChat();
   const toolCallResults = chatSelectors.useToolCallResults();
+  const streaming = chatSelectors.useStatus() === "streaming";
 
   return (
     <Message from="assistant" className="max-w-full">
@@ -110,18 +115,21 @@ const AssistantChatMessage = (message: AssistantMessage) => {
             <MessageResponse>{message.content}</MessageResponse>
           </MessageContent>
           <MessageActions>
-            <MessageAction onClick={() => updateFeedback(true)}>
+            <MessageAction
+              disabled={streaming}
+              onClick={() => updateFeedback(true)}
+            >
               <ThumbsUpIcon
                 fill={feedback === true ? "currentColor" : "none"}
               />
             </MessageAction>
-            <MessageAction onClick={() => updateFeedback(false)}>
+            <MessageAction
+              disabled={streaming}
+              onClick={() => updateFeedback(false)}
+            >
               <ThumbsDownIcon
                 fill={feedback === false ? "currentColor" : "none"}
               />
-            </MessageAction>
-            <MessageAction>
-              <RefreshCcwIcon />
             </MessageAction>
             <MessageAction onClick={() => copy(message.content || "")}>
               {isCopied ? <CheckIcon /> : <CopyIcon />}

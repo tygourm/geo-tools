@@ -19,6 +19,7 @@ const store = new Store<ChatState>({
 const chatActions: {
   setChatState: (state: Partial<ChatState>) => void;
   addMessage: (message: Message) => void;
+  deleteMessage: (messageId: string) => void;
   streamContent: (messageId: string, delta: string) => void;
   addToolCall: (
     toolCallId: string,
@@ -40,6 +41,14 @@ const chatActions: {
       ...prevState,
       messages: [...prevState.messages, message],
     })),
+  deleteMessage: (messageId) => {
+    const index = store.state.messages.findIndex((m) => m.id === messageId);
+    if (index === -1 || store.state.messages[index].role !== "user") return;
+    store.setState((prevState) => ({
+      ...prevState,
+      messages: prevState.messages.slice(0, index),
+    }));
+  },
   streamContent: (messageId, delta) =>
     store.setState((prevState) => ({
       ...prevState,
