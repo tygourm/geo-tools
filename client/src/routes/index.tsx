@@ -3,13 +3,13 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { AppMap } from "@/components/atoms/app-map";
 import { Chat } from "@/components/organisms/chat";
-import { useChat } from "@/hooks/use-chat";
+import { useMode } from "@/stores/chat";
 
 const Route = createFileRoute("/")({ component: Index });
 
 function Index() {
-  const { chatSelectors } = useChat();
-  const mode = chatSelectors.useMode();
+  const mode = useMode();
+
   return mode === "full" ? (
     <div className="flex h-full justify-center">
       <Chat />

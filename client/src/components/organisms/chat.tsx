@@ -24,16 +24,15 @@ import {
   PromptInputTextarea,
   PromptInputTools,
 } from "@/components/ui/ai-elements/prompt-input";
-import { useChat } from "@/hooks/use-chat";
 import { logger } from "@/lib/logs";
 import { cn } from "@/lib/utils";
+import { chatActions, useMessages, useMode, useStatus } from "@/stores/chat";
 
 function Chat() {
   const { t } = useTranslation();
-  const { chatActions, chatSelectors } = useChat();
-  const messages = chatSelectors.useMessages();
-  const status = chatSelectors.useStatus();
-  const mode = chatSelectors.useMode();
+  const messages = useMessages();
+  const status = useStatus();
+  const mode = useMode();
   const [input, setInput] = useState("");
 
   const handleSubmit = (input: PromptInputMessage) => {
@@ -54,54 +53,30 @@ function Chat() {
       {
         onRunStartedEvent: ({ event }) => {
           setInput("");
+          chatActions.setChatState({ status: "streaming" });
           toast.info(t("chat.run-started"));
           logger.info(event.type, event);
-          chatActions.setChatState({
-            threadId: event.threadId,
-            status: "streaming",
-          });
         },
         onRunFinishedEvent: ({ event }) => {
+          chatActions.setChatState({ status: "ready" });
           toast.success(t("chat.run-finished"));
           logger.success(event.type, event);
-          chatActions.setChatState({ status: "ready" });
         },
         onRunErrorEvent: ({ event }) => {
+          chatActions.setChatState({ status: "ready" });
           toast.error(t("chat.run-error", { error: event.message }));
           logger.error(event.type, event);
-          chatActions.setChatState({ status: "ready" });
         },
-        onTextMessageStartEvent: ({ event }) => {
+        onTextMessageStartEvent: ({ event }) =>
           chatActions.addMessage({
             id: event.messageId,
             role: event.role,
             content: "",
-          });
-        },
-        onTextMessageContentEvent: ({ event }) => {
-          chatActions.streamContent(event.messageId, event.delta);
-        },
-        onToolCallStartEvent: ({ event }) => {
-          if (!event.parentMessageId) return;
-          chatActions.addToolCall(
-            event.toolCallId,
-            event.toolCallName,
-            event.parentMessageId,
-          );
-        },
-        onToolCallArgsEvent: ({ event }) => {
-          chatActions.streamToolCallArgs(event.toolCallId, event.delta);
-        },
-        onToolCallResultEvent: ({ event }) => {
-          chatActions.addToolCallResult(
-            event.messageId,
-            event.toolCallId,
-            event.content,
-          );
-        },
-        onMessagesSnapshotEvent: ({ event }) => {
-          chatActions.setChatState({ messages: event.messages });
-        },
+          }),
+        onTextMessageContentEvent: ({ event }) =>
+          chatActions.streamContent(event.messageId, event.delta),
+        onMessagesSnapshotEvent: ({ event }) =>
+          chatActions.setChatState({ messages: event.messages }),
       },
     );
   };

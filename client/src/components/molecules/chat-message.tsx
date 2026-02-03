@@ -22,8 +22,8 @@ import {
   ToolInput,
   ToolOutput,
 } from "@/components/ui/ai-elements/tool";
-import { useChat } from "@/hooks/use-chat";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { chatActions, useStatus, useToolCallResults } from "@/stores/chat";
 
 const useFeedback = () => {
   const [feedback, setFeedback] = useState<boolean | null>(null);
@@ -39,8 +39,7 @@ const UserChatMessage = (message: UserMessage) => {
       ? message.content
       : message.content.find((c) => c.type === "text")?.text || "";
   const [copy, isCopied] = useCopyToClipboard();
-  const { chatActions, chatSelectors } = useChat();
-  const streaming = chatSelectors.useStatus() === "streaming";
+  const status = useStatus();
 
   return (
     <Message from="user" className="max-w-full">
@@ -51,7 +50,7 @@ const UserChatMessage = (message: UserMessage) => {
       </MessageContent>
       <MessageActions className="justify-end">
         <MessageAction
-          disabled={streaming}
+          disabled={status === "streaming"}
           onClick={() => chatActions.deleteMessage(message.id)}
         >
           <TrashIcon />
@@ -67,9 +66,8 @@ const UserChatMessage = (message: UserMessage) => {
 const AssistantChatMessage = (message: AssistantMessage) => {
   const [copy, isCopied] = useCopyToClipboard();
   const { feedback, updateFeedback } = useFeedback();
-  const { chatSelectors } = useChat();
-  const toolCallResults = chatSelectors.useToolCallResults();
-  const streaming = chatSelectors.useStatus() === "streaming";
+  const toolCallResults = useToolCallResults();
+  const status = useStatus();
 
   return (
     <Message from="assistant" className="max-w-full">
@@ -116,7 +114,7 @@ const AssistantChatMessage = (message: AssistantMessage) => {
           </MessageContent>
           <MessageActions>
             <MessageAction
-              disabled={streaming}
+              disabled={status === "streaming"}
               onClick={() => updateFeedback(true)}
             >
               <ThumbsUpIcon
@@ -124,7 +122,7 @@ const AssistantChatMessage = (message: AssistantMessage) => {
               />
             </MessageAction>
             <MessageAction
-              disabled={streaming}
+              disabled={status === "streaming"}
               onClick={() => updateFeedback(false)}
             >
               <ThumbsDownIcon

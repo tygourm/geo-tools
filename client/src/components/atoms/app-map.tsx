@@ -18,9 +18,9 @@ import {
 } from "react-map-gl/maplibre";
 
 import { useResolvedTheme } from "@/components/providers/theme";
-import { useChat } from "@/hooks/use-chat";
-import { useMap } from "@/hooks/use-map";
 import { safeParseJSON } from "@/lib/utils";
+import { useToolCallResults } from "@/stores/chat";
+import { mapActions, useMapState } from "@/stores/map";
 
 function ProjectionControl({ position }: { position: ControlPosition }) {
   useControl(() => new GlobeControl(), { position });
@@ -29,10 +29,8 @@ function ProjectionControl({ position }: { position: ControlPosition }) {
 
 function AppMap() {
   const theme = useResolvedTheme();
-  const { mapActions, mapSelectors } = useMap();
-  const mapState = mapSelectors.useState();
-  const { chatSelectors } = useChat();
-  const toolCallResults = chatSelectors.useToolCallResults();
+  const toolCallResults = useToolCallResults();
+  const mapState = useMapState();
 
   const { points, polygons, lines } = toolCallResults
     .map((tcr) => safeParseJSON<GeoJsonObject>(tcr.content))
