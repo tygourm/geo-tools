@@ -1,11 +1,10 @@
 import { LeftSidebarHeader } from "@/components/molecules/left-sidebar-header";
 import { Chat } from "@/components/organisms/chat";
 import { Sidebar, SidebarContent } from "@/components/ui/sidebar";
-import { useChat } from "@/hooks/use-chat";
+import { useMode } from "@/stores/chat";
 
 function LeftSidebar() {
-  const { chatSelectors } = useChat();
-  const mode = chatSelectors.useMode();
+  const mode = useMode();
 
   return (
     <Sidebar>

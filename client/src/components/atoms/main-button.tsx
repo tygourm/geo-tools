@@ -3,12 +3,11 @@ import { useTranslation } from "react-i18next";
 
 import { WithTooltip } from "@/components/atoms/with-tooltip";
 import { Button } from "@/components/ui/button";
-import { useChat } from "@/hooks/use-chat";
+import { chatActions, useMode } from "@/stores/chat";
 
 function MainButton() {
-  const { chatActions, chatSelectors } = useChat();
-  const mode = chatSelectors.useMode();
   const { t } = useTranslation();
+  const mode = useMode();
 
   return (
     <WithTooltip
